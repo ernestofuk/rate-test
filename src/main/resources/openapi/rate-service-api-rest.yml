@@ -1,0 +1,208 @@
+openapi: 3.0.3
+info:
+  title: Rate Api
+  description: Handle the info about rates in platform
+  version: "1.0"
+tags:
+  - name: rates
+    description: Available operations for rates domain.
+paths:
+  /v1/rate:
+    post:
+      tags:
+        - rates
+      summary: Create new rate
+      operationId: createRate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRate'
+      responses:
+        200:
+          description: Successful operation
+        401:
+          description: Authentication is required to get the requested response
+        500:
+          description: Internal Error
+    patch:
+      tags:
+        - rates
+      summary: Update rate
+      operationId: updateRate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRate'
+      responses:
+        200:
+          description: successful operation
+        401:
+          description: Authentication is required to get the requested response
+        500:
+          description: Internal Error
+  /v1/rate/{rateId}:
+    get:
+      tags:
+        - rates
+      summary: Get rate detail by id
+      operationId: getRateById
+      parameters:
+        - in: path
+          description: The rate code
+          name: rateId
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FindRate'
+        401:
+          description: Authentication is required to get the requested response
+        404:
+          description: Rate not found
+        500:
+          description: Internal Error
+    delete:
+      tags:
+        - rates
+      summary: Remove rate
+      operationId: removeRateById
+      parameters:
+        - in: path
+          description: The rate code
+          name: rateId
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: successful operation
+        401:
+          description: Authentication is required to get the requested response
+        500:
+          description: Internal Error
+  /v1/rate/{date}:
+    get:
+      tags:
+        - rates
+      summary: Get rate detail by date
+      operationId: getRateByDate
+      parameters:
+        - in: path
+          description: The date of the rate
+          name: date
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FindRate'
+        401:
+          description: Authentication is required to get the requested response
+        404:
+          description: Date not found
+        500:
+          description: Internal Error
+components:
+  schemas:
+    CreateRate:
+      type: object
+      properties:
+        brand_id:
+          type: integer
+          example: 1
+        product_id:
+          type: integer
+          example: 1
+        start_date:
+          type: string
+          format: date
+          example: "2022-01-01"
+        end_date:
+          type: string
+          format: date
+          example: "2022-05-31"
+        price:
+          type: integer
+          example: 1550
+        currency_code:
+          type: string
+          example: "EUR"
+      required:
+        - brand_id
+        - product_id
+        - start_date
+        - end_date
+        - price
+        - currency_code
+
+    UpdateRate:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        brand_id:
+          type: integer
+          example: 1
+        product_id:
+          type: integer
+          example: 1
+        start_date:
+          type: string
+          format: date
+          example: "2022-01-01"
+        end_date:
+          type: string
+          format: date
+          example: "2022-05-31"
+        price:
+          type: integer
+          example: 1550
+        currency_code:
+          type: string
+          example: "EUR"
+      required:
+        - id
+        - brand_id
+        - product_id
+        - start_date
+        - end_date
+        - price
+        - currency_code
+
+    FindRate:
+      type: object
+      properties:
+        symbol:
+          type: string
+          example: "€"
+        code:
+          type: string
+          description: ISO Code of the currency
+          example: "EUR"
+        price:
+          type: integer
+          example: 1550.00
+      required:
+        - symbol
+        - code
+        - price
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+security:
+  - basicAuth: []
